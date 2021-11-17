@@ -2,10 +2,17 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils import timezone
+from django.urls import reverse
+
 
 from django.contrib.auth import get_user_model
 # settings.AUTH_USER_MODEL
 User = get_user_model()
+
+
+def get_dog_url(obj, viewname):
+    ct_model = obj.__class__._meta.model_name
+    return reverse(viewname, kwargs={'ct_model': ct_model, 'slug': obj.slug})
 
 
 class LatestDogsManager:
@@ -64,11 +71,14 @@ class Dog(models.Model):
 
 class OurDog(Dog):
 
-    history = models.TextField(max_length=255, verbose_name='История', null=True)  # story about purchasing a pet
+    history = models.TextField(max_length=255, verbose_name='История появления', null=True)  # story about purchasing a pet
     habits = models.TextField(max_length=255, verbose_name='Привычки', null=True)
 
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)
+
+    def get_absolute_url(self):
+        return get_dog_url(self, 'dog_detail')
 
 
 class DogForSale(Dog):
@@ -78,6 +88,9 @@ class DogForSale(Dog):
 
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)
+
+    def get_absolute_url(self):
+        return get_dog_url(self, 'dog_detail')
 
 
 class CartProduct(models.Model):
