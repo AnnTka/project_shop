@@ -45,7 +45,7 @@
                     <a class="nav-link" href="#">О нас</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Контакты</a>
+                    <a class="nav-link" href="#">Корзина</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Войти</a>
@@ -63,8 +63,9 @@
         <div class="col-lg-3">
             <h1 class="my-3">Happy family</h1>
             <div class="list-group">
-                <a href="#" class="list-group-item">Category 1</a>
-                <a href="#" class="list-group-item">Category 2</a>
+                {% for category in categories %}
+                <a href="#" class="list-group-item">{{ category.name}} ({{ category.count }})</a>
+                {% endfor %}
             </div>
 
         </div>

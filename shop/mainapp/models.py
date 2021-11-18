@@ -10,6 +10,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+def get_models_for_count(*model_names):
+    return [models.Count(model_name) for model_name in model_names]
+
+
 def get_dog_url(obj, viewname):
     ct_model = obj.__class__._meta.model_name
     return reverse(viewname, kwargs={'ct_model': ct_model, 'slug': obj.slug})
@@ -40,10 +44,27 @@ class LatestDogs:
     objects = LatestDogsManager()
 
 
+class DogManager(models.Manager):
+
+    COUNT_DOG_NAME = {
+        'Наши собаки': 'ourdog__count',
+        'Собаки на продажу': 'dogforsale__count'
+    }
+
+    def get_queryset(self):
+        return super().get_queryset()
+
+    def get_sidebar_categories(self):
+        models = get_models_for_count('ourdog', 'dogforsale')
+        qs = list(self.get_queryset().annotate(*models).values())
+        return [dict(name=c['name'], slug=c['slug'], count=c[self.COUNT_DOG_NAME[c['name']]]) for c in qs]
+
+
 class Category(models.Model):
 
     name = models.CharField(max_length=255, verbose_name='Имя категории')
-    slug = models.SlugField(unique=True)  # /categories/adult_dog or puppy == slug
+    slug = models.SlugField(unique=True)  # /categories/category_name == slug
+    objects = DogManager()
 
     def __str__(self):
         return self.name

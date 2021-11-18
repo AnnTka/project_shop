@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
 
-from .models import OurDog, DogForSale
+from .models import OurDog, DogForSale, Category
 
 
 def test_view(request):
-    return render(request, 'base.html', {})
+    categories = Category.objects.get_sidebar_categories()
+    return render(request, 'base.html', {'categories': categories})
 
 
 # view for handle multiple models with 1 template

@@ -20,7 +20,8 @@
         <hr>
         <a href="#"><button class="btn btn-danger">Добавить в корзину</button></a>
     </div>
-    <p class="mt-4">Характеристики:</p>
+    <p class="mt-4">Обо мне:</p>
+
     {% if dog.category.slug == 'AdultDog'%}
         {% include 'dogforsale_specification.html' %}
     {% else %}
