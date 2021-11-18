@@ -37,7 +37,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Главная
+                    <a class="nav-link" href="{% url 'base' %}">Главная
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
@@ -101,103 +101,21 @@
             </div>
 
             <div class="row">
-
+                {% for dog in dogs %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/500x400" alt=></a>
+                        <a href="{{ dog.get_absolute_url }}"><img class="card-img-top" src="{{ dog.image.url }}" alt=></a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">Наименование</a>
+                                <a href="{{ dog.get_absolute_url }}">{{ dog.title }}</a>
                             </h4>
-                            <h5>Цена</h5>
-                            <p class="card-text">Описание</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                            <h5>{{ dog.price }} руб.</h5>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/500x400" alt=></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Наименование</a>
-                            </h4>
-                            <h5>Цена</h5>
-                            <p class="card-text">Описание</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/500x400" alt=></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Наименование</a>
-                            </h4>
-                            <h5>Цена</h5>
-                            <p class="card-text">Описание</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/500x400" alt=></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Наименование</a>
-                            </h4>
-                            <h5>Цена</h5>
-                            <p class="card-text">Описание</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/500x400" alt=></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Наименование</a>
-                            </h4>
-                            <h5>Цена</h5>
-                            <p class="card-text">Описание</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/500x400" alt=></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Наименование</a>
-                            </h4>
-                            <h5>Цена</h5>
-                            <p class="card-text">Описание</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
+                {% endfor %}
+            </div>
+            <!-- /.row -->
 
             </div>
             <!-- /.col-lg-9 -->

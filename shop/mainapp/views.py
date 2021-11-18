@@ -1,21 +1,34 @@
 from django.shortcuts import render
-from django.views.generic import DetailView
+from django.views.generic import DetailView, View
 
-from .models import OurDog, DogForSale, Category
+from .models import OurDog, DogForSale, Category, LatestDogs
 from .mixins import CategoryDetailMixin
 
 
-def test_view(request):
-    categories = Category.objects.get_sidebar_categories()
-    return render(request, 'base.html', {'categories': categories})
+class BaseView(View):
+
+    def get(self, request, *args, **kwargs):
+        categories = Category.objects.get_sidebar_categories()
+        dogs = LatestDogs.objects.get_dog_for_main_page(
+            'ourdog', 'dogforsale', with_respect_to='dogforsale'
+        )
+        context = {
+            'categories': categories,
+            'dogs': dogs
+        }
+        return render(request, 'base.html', context)
+
+# def test_view(request):
+# categories = Category.objects.get_sidebar_categories()
+# return render(request, 'base.html', {'categories': categories})
 
 
 # view for handle multiple models with 1 template
 class DogDetailView(CategoryDetailMixin, DetailView):
 
     CT_MODEL_MODEL_CLASS = {
-        'our': OurDog,
-        'sale': DogForSale
+        'ourdog': OurDog,
+        'dogforsale': DogForSale
     }
 
     # to define the model and display their objects,
