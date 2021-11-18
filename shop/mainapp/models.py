@@ -56,8 +56,12 @@ class DogManager(models.Manager):
 
     def get_sidebar_categories(self):
         models = get_models_for_count('ourdog', 'dogforsale')
-        qs = list(self.get_queryset().annotate(*models).values())
-        return [dict(name=c['name'], slug=c['slug'], count=c[self.COUNT_DOG_NAME[c['name']]]) for c in qs]
+        qs = list(self.get_queryset().annotate(*models))
+        data = [
+            dict(name=c.name, url=c.get_absolute_url(), count=getattr(c, self.COUNT_DOG_NAME[c.name]))
+            for c in qs
+        ]
+        return data
 
 
 class Category(models.Model):
@@ -68,6 +72,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
 
 
 class Dog(models.Model):
