@@ -3,7 +3,7 @@ from .models import *
 
 
 admin.site.register(Dog)
-admin.site.register(CartProduct)
+admin.site.register(CartDog)
 admin.site.register(Cart)
 admin.site.register(Category)
 admin.site.register(Customer)
