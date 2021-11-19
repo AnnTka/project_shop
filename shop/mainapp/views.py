@@ -21,6 +21,7 @@ class BaseView(View):
 # view for handle multiple models with 1 template
 class DogDetailView(DetailView):
 
+    model = Dog
     context_object_name = 'dog'
     template_name = 'dog_detail.html'
     slug_url_kwarg = 'slug'
@@ -42,6 +43,15 @@ class CategoryDetailView(DetailView):
     context_object_name = 'category'
     template_name = 'category_detail.html'
     slug_url_kwarg = 'slug'
+
+    def get(self, request, *args, **kwargs):
+        categories = Category.objects.all()
+        dogs = Dog.objects.all()
+        context = {
+            'categories': categories,
+            'dogs': dogs
+        }
+        return render(request, 'category_detail.html', context)
 
 
 class LoginView(View):
@@ -87,9 +97,9 @@ class RegistrationView(View):
             Customer.objects.create(
                 user=new_user,
                 phone=form.cleaned_data['phone'],
-                address=form.cleaned_data['address'],
+                address=form.cleaned_data['address']
             )
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            user = authenticate(username=new_user.username, password=form.cleaned_data['password'])
             login(request, user)
             return HttpResponseRedirect('/')
         context = {'form': form}
