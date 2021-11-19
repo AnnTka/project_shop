@@ -11,12 +11,14 @@
         {% for dog in category_dogs %}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
-                    <a href="{{ dog.get_absolute_url }}"><img class="card-img-top" src="{{ dog.image.url }}" alt=></a>
+                    <a href="{{ dog.get_absolute_url }}"><img class="card-img-top" src="{{ item.dog.image.url }}" alt=></a>
                     <div class="card-body">
                         <h4 class="card-title">
                             <a href="{{ dog.get_absolute_url }}">{{ dog.title }}</a>
                         </h4>
                         <h5>{{ dog.price }} руб.</h5>
+                        <a href="#"> <button class="btn btn-danger">Купить</button>
+                        </a>
                     </div>
                 </div>
             </div>

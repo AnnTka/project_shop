@@ -11,22 +11,16 @@
     </nav>
 <div class="row">
     <div class="col-md-4">
-        <img src="{{ dog.image.url }}" class="img-fluid">
+        <img src="{{ item.dog.image.url }}" class="img-fluid">
     </div>
     <div class="col-md-8">
         <h3>{{ dog.title }}</h3>
         <p>Цена: {{ dog.price }} руб.</p>
         <p>Описание: {{ dog.description }}</p>
         <hr>
-        <a href="#"><button class="btn btn-danger">Добавить в корзину</button></a>
+        <a href="#"><button class="btn btn-danger">Купить</button></a>
     </div>
     <p class="mt-4">Обо мне:</p>
-
-    {% if dog.category.slug == 'AdultDog'%}
-        {% include 'dogforsale_specification.html' %}
-    {% else %}
-        {% include 'ourdog_specification.html' %}
-    {% endif %}
 
 </div>
 

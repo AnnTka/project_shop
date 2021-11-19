@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Shop Homepage - Start Bootstrap Template</title>
+  <title></title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -29,7 +29,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">Питомник | Nursery</a>
+        <a class="navbar-brand" href="{% url 'base' %}">Питомник | Nursery</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -48,6 +48,9 @@
                     <a class="nav-link" href="#">Корзина</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#">Регистрация</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#">Войти</a>
                 </li>
             </ul>
@@ -61,11 +64,9 @@
     <div class="row">
 
         <div class="col-lg-3">
-            <h1 class="my-3">Happy family</h1>
+            <h1 class="my-4">Happy family</h1>
             <div class="list-group">
-                {% for category in categories %}
-                <a href="{{ category.url }}" class="list-group-item">{{ category.name}} ({{ category.count }})</a>
-                {% endfor %}
+
             </div>
 
         </div>
@@ -104,12 +105,15 @@
                 {% for dog in dogs %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="{{ dog.get_absolute_url }}"><img class="card-img-top" src="{{ dog.image.url }}" alt=></a>
+                        <a href="{{ dog.get_absolute_url }}"><img class="card-img-top" src="{{ item.dog.image.url }}" alt=></a>
                         <div class="card-body">
                             <h4 class="card-title">
                                 <a href="{{ dog.get_absolute_url }}">{{ dog.title }}</a>
                             </h4>
                             <h5>{{ dog.price }} руб.</h5>
+                            <hr>
+                            <a href="#"> <button class="btn btn-danger">Купить</button>
+                            </a>
                         </div>
                     </div>
                 </div>

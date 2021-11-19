@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils import timezone
 from django.urls import reverse
 
@@ -10,65 +8,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-def get_models_for_count(*model_names):
-    return [models.Count(model_name) for model_name in model_names]
-
-
-def get_dog_url(obj, viewname):
-    ct_model = obj.__class__._meta.model_name
-    return reverse(viewname, kwargs={'ct_model': ct_model, 'slug': obj.slug})
-
-
-class LatestDogsManager:
-    # for display dogs on the main page
-    @staticmethod
-    def get_dog_for_main_page(*args, **kwargs):
-        with_respect_to = kwargs.get('with_respect_to')  # prioritizing the output of results
-        dogs = []
-        ct_models = ContentType.objects.filter(model__in=args)
-        for ct_model in ct_models:
-            model_dogs = ct_model.model_class()._base_manager.all().order_by('-id')[:5]
-            dogs.extend(model_dogs)
-        if with_respect_to:
-            ct_model = ContentType.objects.filter(model=with_respect_to)
-            if ct_model.exists():
-                if with_respect_to in args:
-                    return sorted(
-                        dogs, key=lambda x: x.__class__._meta.model_name.startswith(with_respect_to), reverse=True
-                    )
-        return dogs
-
-
-class LatestDogs:
-
-    objects = LatestDogsManager()
-
-
-class DogManager(models.Manager):
-
-    COUNT_DOG_NAME = {
-        'Наши собаки': 'ourdog__count',
-        'Собаки на продажу': 'dogforsale__count'
-    }
-
-    def get_queryset(self):
-        return super().get_queryset()
-
-    def get_sidebar_categories(self):
-        models = get_models_for_count('ourdog', 'dogforsale')
-        qs = list(self.get_queryset().annotate(*models))
-        data = [
-            dict(name=c.name, url=c.get_absolute_url(), count=getattr(c, self.COUNT_DOG_NAME[c.name]))
-            for c in qs
-        ]
-        return data
-
-
 class Category(models.Model):
 
     name = models.CharField(max_length=255, verbose_name='Имя категории')
     slug = models.SlugField(unique=True)  # /categories/category_name == slug
-    objects = DogManager()
 
     def __str__(self):
         return self.name
@@ -78,10 +21,6 @@ class Category(models.Model):
 
 
 class Dog(models.Model):
-
-    # abstract model without migration, parent class
-    class Meta:
-        abstract = True
 
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Наименование')
@@ -96,40 +35,15 @@ class Dog(models.Model):
     def __str__(self):
         return self.title
 
-
-class OurDog(Dog):
-
-    history = models.TextField(max_length=255, verbose_name='История появления', null=True)  # story about purchasing a pet
-    habits = models.TextField(max_length=255, verbose_name='Привычки', null=True)
-
-    def __str__(self):
-        return "{} : {}".format(self.category.name, self.title)
-
     def get_absolute_url(self):
-        return get_dog_url(self, 'dog_detail')
-
-
-class DogForSale(Dog):
-
-    description = models.TextField(max_length=255, verbose_name='Описание', null=True)
-    parents = models.TextField(max_length=255, verbose_name='Родители', null=True)  # this is preferably a link
-
-    def __str__(self):
-        return "{} : {}".format(self.category.name, self.title)
-
-    def get_absolute_url(self):
-        return get_dog_url(self, 'dog_detail')
+        return reverse('dog_detail', kwargs={'slug': self.slug})
 
 
 class CartProduct(models.Model):
 
     user = models.ForeignKey('Customer', verbose_name='Покупатель', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
-    # p = DogProduct.objects.get(dog1)
-    # cp = CartProduct.object.create(content_object=dog1)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # autocomplete
-    object_id = models.PositiveIntegerField()  # autocomplete
-    content_object = GenericForeignKey('content_type', 'object_id')
+    dog = models.ForeignKey(Dog, verbose_name='Собака', on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=1)
     final_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Итоговая стоимость', null=True)
 
