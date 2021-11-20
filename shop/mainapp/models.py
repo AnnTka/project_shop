@@ -29,7 +29,7 @@ class Dog(models.Model):
     breed = models.TextField(max_length=100, verbose_name='Порода')
     color = models.TextField(max_length=255, verbose_name='Окрас')
     gender = models.TextField(max_length=10, verbose_name='Пол')
-    age = models.TextField(max_length=10, verbose_name='Возраст')
+    age = models.TextField(max_length=50, verbose_name='Возраст')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена', null=True)
 
     def __str__(self):

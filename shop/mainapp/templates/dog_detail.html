@@ -1,27 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<nav aria-label="breadcrumb" class="mt-5">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'base' %}">Главная</a></li>
-        <li class="breadcrumb-item"><a href="{{ dog.category.get_absolute_url }}">{{ dog.category.name }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ dog.title }}</li>
-      </ol>
-    </nav>
-<div class="row">
-    <div class="col-md-4">
-        <img src="{{ dog.image.url }}" class="img-fluid">
-    </div>
-    <div class="col-md-8">
-        <h3>{{ dog.title }}</h3>
-        <p>Цена: {{ dog.price }} руб.</p>
-        <p>Описание: {{ dog.description }}</p>
-        <hr>
-        {% if request.user.is_authenticated %}<a href="#"><button class="btn btn-danger">Купить</button></a>{% endif %}
-    </div>
-    <p class="mt-4">Обо мне:</p>
-
-</div>
-
+    {% for dog in dogs %}
+        <nav aria-label="breadcrumb" class="mt-5">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'base' %}">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{{ dog.category.get_absolute_url }}">{{ dog.category.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ dog.title }}</li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <img src="{{ dog.image.url }}" class="img-fluid" alt="">
+            </div>
+            <div class="col-md-8">
+                <h3>{{ dog.title }}</h3>
+                <p>Цена: {{ dog.price }} руб.</p>
+                <hr>
+                <p>Описание: {{ dog.description }}</p>
+                <hr>
+                {% if request.user.is_authenticated %}<a href="#">
+                    <button class="btn btn-danger">Купить</button>
+                </a>{% endif %}
+            </div>
+            <p class="mt-4" style="margin-left: 13px">Обо мне:</p>
+        </div>
+    {% endfor %}
 {% endblock content %}
