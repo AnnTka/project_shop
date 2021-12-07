@@ -36,6 +36,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
+                {% if request.user.is_authenticated %}
                     <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Категории
@@ -45,6 +46,7 @@
                             <a class="dropdown-item" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                         {% endfor %}
                     </div>
+                {% endif %}
                 </li>
                 {% if not request.user.is_authenticated %}
                     <li>
@@ -57,7 +59,11 @@
                 <li class="nav-item">
                     {% if request.user.is_authenticated %}<span class="navbar text text-light">Здравствуйте, <span class="badge badge-danger">
                     <a style="text-decoration: none; font-size:14px; color:white" href="#">{{ request.user.username }}</a>
-                    </span></span> | <a href="{% url 'logout' %}">Выйти</a>{% endif %}
+                    </span>| <a href="{% url 'logout' %}">Выйти</a></span>
+                    {% else %}
+                        <a class="badge badge-danger" style="text-decoration: none; font-size:16px; color:white; margin-bottom: 10px">
+                        Здравствуйте!
+                        Пожалуйста, авторизуйтесь для просмотра стоимости и совершения заказа.</a>{% endif %}
                 </li>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active"></ul>
@@ -104,8 +110,9 @@
                     <span class="sr-only">Next</span>
                 </a>
             </div>
+
             <div class="row mt-5">
-                {% for dog in dogs %}
+            {% for dog in dogs %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
                         <a href="{{ dog.get_absolute_url }}"><img class="card-img-top" src="{{ dog.image.url }}" alt=""></a>
@@ -113,15 +120,16 @@
                             <h4 class="card-title">
                                 <a href="{{ dog.get_absolute_url }}">{{ dog.title }}</a>
                             </h4>
-                            <h5>{{ dog.price }} руб.</h5>
+                            {% if request.user.is_authenticated %}<h5>{{ dog.price }} руб.</h5>
                             <hr>
-                            {% if request.user.is_authenticated %}<a href="#"> <button class="btn btn-danger">Купить</button>{% endif %}
+                            <a href="#"> <button class="btn btn-danger">Купить</button>{% endif %}
                             </a>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+            {% endfor %}
             </div>
+
             <!-- /.row -->
 
             </div>

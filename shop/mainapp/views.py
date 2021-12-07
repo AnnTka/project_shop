@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView, View
-from .models import Category, Dog, CartDog, Cart, Customer
+from .models import Category, Dog, Customer
 from .forms import LoginForm, RegistrationForm
 from django.contrib.auth import authenticate, login
 
@@ -18,22 +18,12 @@ class BaseView(View):
         return render(request, 'base.html', context)
 
 
-# view for handle multiple models with 1 template
 class DogDetailView(DetailView):
 
     model = Dog
     context_object_name = 'dog'
     template_name = 'dog_detail.html'
     slug_url_kwarg = 'slug'
-
-    def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
-        dogs = Dog.objects.all()
-        context = {
-            'categories': categories,
-            'dogs': dogs
-        }
-        return render(request, 'dog_detail.html', context)
 
 
 class CategoryDetailView(DetailView):
@@ -45,8 +35,8 @@ class CategoryDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
-        dogs = Dog.objects.all()
+        categories = Category.objects.filter(slug='dogforsale')
+        dogs = Dog.objects.filter(category_id=categories[0].id)
         context = {
             'categories': categories,
             'dogs': dogs
@@ -102,5 +92,6 @@ class RegistrationView(View):
             user = authenticate(username=new_user.username, password=form.cleaned_data['password'])
             login(request, user)
             return HttpResponseRedirect('/')
-        context = {'form': form}
+        categories = Category.objects.all()
+        context = {'form': form, 'categories': categories}
         return render(request, 'registration.html', context)
